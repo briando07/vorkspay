@@ -190,7 +190,7 @@ app.get('/api/products', async (req,res)=>{
   }catch(e){ console.error(e); res.status(500).json({error:e.message}); }
 });
 
-// Checkout
+  // Checkout
 app.post('/api/checkout/:productId', async (req,res)=>{
   try{
     const productId = parseInt(req.params.productId);
@@ -202,41 +202,33 @@ app.post('/api/checkout/:productId', async (req,res)=>{
     const txid = 'tx_' + nanoid(12);
     await conn.query('INSERT INTO transactions(id,merchant_id,product_id,amount_cents,status,customer_email,customer_name,customer_cpf) VALUES(?,?,?,?,?,?,?,?)',
       [txid, product.merchant_id, product.id, product.price_cents, 'created', email, name, cpf]);
+
     const payment_data = {
-      transaction_amount: product.price_cents/100,
+      transaction_amount: product.price_cents / 100,
       payment_method_id: "pix",
-      payer: {
-        email: email,
-        first_name: name || 'Cliente'
-      }
+      payer: { email, first_name: name || 'Cliente' }
     };
-  const { MercadoPagoConfig, Payment } = require('mercadopago');
-const mpClient = new MercadoPagoConfig({ accessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN || '' });
-const mpPayment = new Payment(mpClient);
 
-let mpRes;
-try {
-  mpRes = await mpPayment.create({ body: payment_data });
-} catch (err) {
-  console.error('Erro Mercado Pago:', err);
-  await conn.end();
-  return res.status(500).json({ error: 'Erro ao criar pagamento no Mercado Pago' });
-}
+    // usa o Payment já importado no topo
+    const mpPayment = new Payment(mpClient);
+    let mpRes;
+    try {
+      mpRes = await mpPayment.create({ body: payment_data });
+    } catch (err) {
+      console.error('Erro Mercado Pago:', err);
+      await conn.end();
+      return res.status(500).json({ error: 'Erro ao criar pagamento no Mercado Pago' });
+    }
 
-const qr =
-  (mpRes &&
-   mpRes.point_of_interaction &&
-   mpRes.point_of_interaction.transaction_data &&
-   mpRes.point_of_interaction.transaction_data.qr_code) || null;
+    const qr = mpRes?.point_of_interaction?.transaction_data?.qr_code || null;
+    await conn.end();
+    res.json({ txid, qr, mp: mpRes });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: e.message });
+  }
+});
 
-await conn.end();
-res.json({ txid, qr, mp: mpRes });
-
-} catch (e) {
-  console.error(e);
-  res.status(500).json({ error: e.message });
-}
-}); 
 app.get('/api/transactions', auth, async (req,res)=>{
   try{
     const conn = await getConn();
