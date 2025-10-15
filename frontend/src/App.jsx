@@ -9,7 +9,8 @@ import Marketplace from './pages/Marketplace'
 import Product from './pages/Product'
 import CreateProduct from './pages/CreateProduct'
 import AdminPanel from './pages/AdminPanel'
-import Withdraw from './pages/Withdraw/import financeiro from/pages/Financeiro'
+import Withdraw from './pages/Withdraw'
+import Financeiro from './pages/Financeiro'
 import AdminUsers from './pages/AdminUsers'
 import { getToken } from './utils/auth'
 
@@ -26,7 +27,8 @@ export default function App(){
       <Route path='/marketplace' element={<Marketplace/>} />
       <Route path='/product/:id' element={<Product/>} />
       <Route path='/create-product' element={<Private><CreateProduct/></Private>} />
-      <Route path='/withdraw' element={<Private><Withdraw/></Private>} />    <Route path='/financeiro' element={<Private><financeiro/></Private>} />
+      <Route path='/withdraw' element={<Private><Withdraw/></Private>} />
+      <Route path='/financeiro' element={<Private><Financeiro/></Private>} />
       <Route path='/admin' element={<Private><AdminPanel/></Private>} />
       <Route path='/admin/users' element={<Private><AdminUsers/></Private>} />
     </Routes>
