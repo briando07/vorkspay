@@ -1,4 +1,3 @@
-
 require('dotenv').config();
 const express = require('express');
 const helmet = require('helmet');
@@ -6,7 +5,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const qrcode = require('qrcode');
-const mpPayment = new Payment(mpClient);
+const { MercadoPagoConfig, Payment } = require('mercadopago');
 const { nanoid } = require('nanoid');
 const mysql = require('mysql2/promise');
 const fs = require('fs');
