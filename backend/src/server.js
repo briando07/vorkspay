@@ -5,7 +5,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const qrcode = require('qrcode');
-const mercadopago = require('mercadopago');
+const { MercadoPagoConfig, Payment } = require('mercadopago');
 const { nanoid } = require('nanoid');
 const mysql = require('mysql2/promise');
 const fs = require('fs');
@@ -13,7 +13,9 @@ const path = require('path');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-mercadopago.configure({ access_token: process.env.MERCADO_PAGO_ACCESS_TOKEN || '' });
+const mpClient = new MercadoPagoConfig({
+  accessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN || ''
+});
 
 const uploadDir = path.join(__dirname, '..', 'uploads');
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
@@ -349,8 +351,7 @@ app.get('/api/admin/stats', auth, adminOnly, async (req,res)=>{
 
 app.get('/', (req,res)=>res.json({ ok:true }));
 
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
-
