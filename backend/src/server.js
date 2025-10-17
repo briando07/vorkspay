@@ -1,4 +1,3 @@
-
 require('dotenv').config();
 const express = require('express');
 const helmet = require('helmet');
@@ -350,5 +349,5 @@ app.get('/api/admin/stats', auth, adminOnly, async (req,res)=>{
 
 app.get('/', (req,res)=>res.json({ ok:true }));
 
-const PORT = process.env.PORT || 3333;
-app.listen(PORT, ()=>console.log('Vorkspay backend running on', PORT));
+const port = process.env.PORT || 8080;
+app.listen(port, () => console.log('Vorkspay backend running on', port));
