@@ -349,5 +349,8 @@ app.get('/api/admin/stats', auth, adminOnly, async (req,res)=>{
 
 app.get('/', (req,res)=>res.json({ ok:true }));
 
-const port = process.env.PORT || 8080;
-app.listen(port, () => console.log('Vorkspay backend running on', port));
+const port = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
+});
+
