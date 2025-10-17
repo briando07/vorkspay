@@ -1,11 +1,9 @@
 {
   "build": {
     "builder": "NIXPACKS",
-    "buildCommand": "npm install && npx vite build",
-    "rootDir": "frontend"
+    "buildCommand": "cd frontend && npm ci && npm install vite && npx vite build"
   },
   "deploy": {
-    "startCommand": "npx vite preview --host",
-    "rootDir": "frontend"
+    "startCommand": "cd frontend && npx vite preview --host"
   }
 }
